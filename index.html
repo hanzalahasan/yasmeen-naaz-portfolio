@@ -1128,6 +1128,60 @@ document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeLi
   });
 })();
 </script>
+<button id="scrollToggleBtn" class="scroll-toggle-btn">Bring me down ↓</button>
 
+<style>
+.scroll-toggle-btn{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:99999;
+  padding:14px 18px;
+  border:1px solid rgba(99,229,218,.45);
+  background:#63e5da;
+  color:#06110f;
+  font-weight:900;
+  font-size:13px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:0 0 25px rgba(99,229,218,.35);
+}
+
+@media(max-width:768px){
+  .scroll-toggle-btn{
+    right:14px;
+    bottom:14px;
+    padding:12px 14px;
+    font-size:11px;
+  }
+}
+</style>
+
+<script>
+const scrollToggleBtn = document.getElementById("scrollToggleBtn");
+
+function updateScrollButton(){
+  const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
+  if(nearBottom){
+    scrollToggleBtn.textContent = "Bring me up ↑";
+  }else{
+    scrollToggleBtn.textContent = "Bring me down ↓";
+  }
+}
+
+scrollToggleBtn.addEventListener("click", function(){
+  const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
+
+  if(nearBottom){
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }else{
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+  }
+});
+
+window.addEventListener("scroll", updateScrollButton);
+updateScrollButton();
+</script>
 </body>
 </html>
