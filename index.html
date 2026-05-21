@@ -1058,5 +1058,76 @@ function closeLightbox(event){
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeLightbox(); });
 </script>
 
+
+<!-- Floating Scroll Button + Final Mobile Menu Fix -->
+<button id="scrollArrow" class="scroll-arrow" type="button" aria-label="Scroll down">↓</button>
+<style>
+.scroll-arrow{
+  position:fixed;right:18px;bottom:18px;width:48px;height:48px;border-radius:50%;
+  border:1px solid rgba(98,229,223,.55);background:#62e5df;color:#03100f;
+  font-size:24px;font-weight:900;z-index:10000;cursor:pointer;box-shadow:0 0 28px rgba(98,229,223,.35);
+}
+.scroll-arrow:hover{transform:translateY(-2px) scale(1.04)}
+@media(max-width:980px){
+  .mobile-menu{display:none!important;}
+  .mobile-menu.open{display:block!important;}
+  .menu-toggle{display:flex!important;}
+  body.menu-open{overflow:hidden!important;}
+}
+</style>
+<script>
+(function(){
+  function closeMobileMenu(){
+    const menu=document.getElementById('mobileMenu');
+    const btn=document.getElementById('menuToggle');
+    if(!menu || !btn) return;
+    menu.classList.remove('open');
+    btn.classList.remove('active');
+    btn.setAttribute('aria-expanded','false');
+    document.body.classList.remove('menu-open');
+  }
+  function toggleMobileMenu(e){
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    const menu=document.getElementById('mobileMenu');
+    const btn=document.getElementById('menuToggle');
+    if(!menu || !btn) return;
+    const open=!menu.classList.contains('open');
+    menu.classList.toggle('open',open);
+    btn.classList.toggle('active',open);
+    btn.setAttribute('aria-expanded',open ? 'true' : 'false');
+    document.body.classList.toggle('menu-open',open);
+  }
+  window.toggleMobileMenu=toggleMobileMenu;
+  window.closeMobileMenu=closeMobileMenu;
+  document.addEventListener('DOMContentLoaded',function(){
+    const btn=document.getElementById('menuToggle');
+    const menu=document.getElementById('mobileMenu');
+    if(btn){
+      btn.onclick=toggleMobileMenu;
+      btn.addEventListener('touchstart',toggleMobileMenu,{passive:false});
+    }
+    if(menu){
+      menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMobileMenu));
+    }
+    const scrollBtn=document.getElementById('scrollArrow');
+    function updateArrow(){
+      if(!scrollBtn) return;
+      const nearBottom=(window.innerHeight+window.scrollY)>=(document.documentElement.scrollHeight-80);
+      scrollBtn.textContent=nearBottom?'↑':'↓';
+      scrollBtn.setAttribute('aria-label',nearBottom?'Scroll to top':'Scroll down');
+    }
+    if(scrollBtn){
+      scrollBtn.addEventListener('click',function(){
+        const nearBottom=(window.innerHeight+window.scrollY)>=(document.documentElement.scrollHeight-80);
+        if(nearBottom){ window.scrollTo({top:0,behavior:'smooth'}); }
+        else{ window.scrollBy({top:window.innerHeight*0.9,behavior:'smooth'}); }
+      });
+      window.addEventListener('scroll',updateArrow,{passive:true});
+      updateArrow();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
