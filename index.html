@@ -1158,30 +1158,67 @@ document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeLi
 }
 </style>
 
-<script>
-const scrollToggleBtn = document.getElementById("scrollToggleBtn");
+<div class="page-arrow-controls">
+  <button class="page-arrow-btn" id="goTopBtn">↑</button>
+  <button class="page-arrow-btn" id="goBottomBtn">↓</button>
+</div>
 
-function updateScrollButton(){
-  const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
-  if(nearBottom){
-    scrollToggleBtn.textContent = "Bring me up ↑";
-  }else{
-    scrollToggleBtn.textContent = "Bring me down ↓";
-  }
+<style>
+.page-arrow-controls{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:99999;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }
 
-scrollToggleBtn.addEventListener("click", function(){
-  const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
+.page-arrow-btn{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  border:1px solid rgba(99,229,218,.45);
+  background:#12d9d2;
+  color:#04100f;
+  font-size:24px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 0 20px rgba(18,217,210,.35);
+}
 
-  if(nearBottom){
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }else{
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+.page-arrow-btn:hover{
+  transform:translateY(-2px);
+}
+
+@media(max-width:768px){
+  .page-arrow-controls{
+    right:12px;
+    bottom:12px;
   }
+
+  .page-arrow-btn{
+    width:42px;
+    height:42px;
+    font-size:22px;
+  }
+}
+</style>
+
+<script>
+document.getElementById("goTopBtn").addEventListener("click", function(){
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 });
 
-window.addEventListener("scroll", updateScrollButton);
-updateScrollButton();
+document.getElementById("goBottomBtn").addEventListener("click", function(){
+  window.scrollTo({
+    top:document.body.scrollHeight,
+    behavior:"smooth"
+  });
+});
 </script>
 </body>
 </html>
